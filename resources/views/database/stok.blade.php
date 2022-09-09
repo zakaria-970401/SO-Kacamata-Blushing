@@ -1,6 +1,6 @@
 @extends('layouts.base')
 
-@section('title', 'Management Item Material')
+@section('title', 'Management Stok Material')
 
 @section('content')
     <link rel="stylesheet" href="//cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">

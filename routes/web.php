@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SuperAdminController;
+use App\Http\Controllers\KedatanganController;
+use App\Http\Controllers\PengeluaranController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,11 +39,22 @@ Route::prefix('master')->group(function () {
 
     Route::get('/stok', [SuperAdminController::class, 'masterStok']);
     Route::GET('/updateStok/{qty}/{id}', [SuperAdminController::class, 'updateStok']);
-    // Route::POST('/postItem', [SuperAdminController::class, 'postItem']);
-    // Route::get('/deleteItem/{id}', [SuperAdminController::class, 'deleteItem']);
-    // Route::get('/showItem/{id}', [SuperAdminController::class, 'showItem']);
+});
 
+Route::prefix('kedatangan/')->group(function () {
+    Route::get('/', [KedatanganController::class, 'index']);
+    Route::POST('postKedatangan', [KedatanganController::class, 'postKedatangan']);
+    Route::POST('checkInputan', [KedatanganController::class, 'checkInputan']);
+    Route::get('/getUpdateQty', [KedatanganController::class, 'getUpdateQty']);
+    Route::POST('postUpdateQty', [KedatanganController::class, 'postUpdateQty']);
+});
 
+Route::prefix('pengeluaran/')->group(function () {
+    Route::get('/', [PengeluaranController::class, 'index']);
+    Route::POST('postPengeluaran', [PengeluaranController::class, 'postPengeluaran']);
+    Route::POST('checkInputan', [PengeluaranController::class, 'checkInputan']);
+    Route::get('/getUpdateQty', [PengeluaranController::class, 'getUpdateQty']);
+    Route::POST('postUpdateQty', [PengeluaranController::class, 'postUpdateQty']);
 });
 
 Route::POST('change-password', [SuperAdminController::class, 'change_password']);

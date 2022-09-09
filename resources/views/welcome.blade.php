@@ -7,7 +7,7 @@
     <title>FORM LOGIN</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="shortcut icon" href="{{ url('assets/images/favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ url('assets/images/favico.ico') }}">
     <!-- Layout config Js -->
     <script src="{{ url('assets/js/layout.js') }}"></script>
     <!-- Bootstrap Css -->

@@ -11,7 +11,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{ url('assets/images/favicon.ico') }}">
+    <link rel="shortcut icon" href="{{ url('assets/images/favico.ico') }}">
 
     <!-- jsvectormap css -->
     <link href="{{ url('assets/libs/jsvectormap/css/jsvectormap.min.css') }}" rel="stylesheet" type="text/css" />

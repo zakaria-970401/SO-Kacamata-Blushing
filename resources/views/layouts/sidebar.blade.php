@@ -33,20 +33,25 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url('master/item') }}" class="nav-link" data-key="t-analytics"> Item Material
+                            <a href="{{ url('master/item') }}" class="nav-link" data-key="t-analytics"> Item
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ url('master/stok') }}" class="nav-link" data-key="t-analytics"> Stok Item
-                                Material
+
                             </a>
                         </li>
                     </ul>
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link menu-link" href="javascript:void(0)">
-                    <i class="mdi mdi-shopping"></i> <span data-key="t-widgets">Kedatangan Item Material</span>
+                <a class="nav-link menu-link" href="{{ url('kedatangan') }}">
+                    <i class="mdi mdi-shopping"></i> <span data-key="t-widgets">Kedatangan Item</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link menu-link" href="{{ url('pengeluaran') }}">
+                    <i class="mdi mdi-exit-to-app"></i> <span data-key="t-widgets">Pengeluaran Item</span>
                 </a>
             </li>
             <li class="nav-item">
