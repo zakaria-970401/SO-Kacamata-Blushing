@@ -3,7 +3,6 @@
 @section('title', 'Management Item Material')
 
 @section('content')
-    <link rel="stylesheet" href="//cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
     <style type="text/css">
         .hide {
             display: none;
@@ -143,7 +142,6 @@
             </div>
         </div>
     </div>
-    <script src="//cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
             $('#itemTable').DataTable();

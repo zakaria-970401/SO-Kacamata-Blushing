@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\KedatanganController;
 use App\Http\Controllers\PengeluaranController;
+use App\Http\Controllers\StokOpnameController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,8 +54,18 @@ Route::prefix('pengeluaran/')->group(function () {
     Route::get('/', [PengeluaranController::class, 'index']);
     Route::POST('postPengeluaran', [PengeluaranController::class, 'postPengeluaran']);
     Route::POST('checkInputan', [PengeluaranController::class, 'checkInputan']);
-    Route::get('/getUpdateQty', [PengeluaranController::class, 'getUpdateQty']);
-    Route::POST('postUpdateQty', [PengeluaranController::class, 'postUpdateQty']);
+    // Route::get('/getUpdateQty', [PengeluaranController::class, 'getUpdateQty']);
+    // Route::POST('postUpdateQty', [PengeluaranController::class, 'postUpdateQty']);
+});
+
+Route::prefix('so/')->group(function () {
+    Route::get('/', [StokOpnameController::class, 'index']);
+    Route::get('start', [StokOpnameController::class, 'start']);
+    Route::get('stop', [StokOpnameController::class, 'stop']);
+    Route::get('getList', [StokOpnameController::class, 'getList']);
+    Route::POST('compareQty', [StokOpnameController::class, 'compareQty']);
+    Route::POST('postQty', [StokOpnameController::class, 'postQty']);
+    Route::get('cariData/{tgl_mulai}/{tgl_selesai}', [StokOpnameController::class, 'cariData']);
 });
 
 Route::POST('change-password', [SuperAdminController::class, 'change_password']);

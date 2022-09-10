@@ -55,11 +55,34 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link menu-link" href="javascript:void(0)">
-                    <i class="mdi mdi-clipboard-list"></i> <span data-key="t-widgets">Permintaan Revisi Stok
-                        Opname</span> <span class="badge badge-pill bg-danger" data-key="t-new">23</span>
+                <a class="nav-link menu-link" href="#hasil-stokopname" data-bs-toggle="modal">
+                    <i class="mdi mdi-file-excel"></i> <span data-key="t-widgets">Hasil Stok Opname</span>
                 </a>
             </li>
+            @php
+                $so = DB::table('master_stokopname')
+                ->whereMonth('created_at', date('m'))->whereYear('created_at', date('Y'))
+                ->get();
+                @endphp
+            @if($so->where('status', 0)->count() > 0 or $so->count() == 0)
+            <li class="nav-item">
+                <a class="nav-link menu-link" href="{{ url('so/start') }}">
+                    <i class="mdi mdi-play"></i> <span data-key="t-widgets">Start Opname</span> 
+                </a>
+            </li>
+            @endif
+            @if($so->where('status', 1)->count() > 0)
+            <li class="nav-item">
+                <a class="nav-link menu-link" href="{{ url('so/stop') }}">
+                    <i class="mdi mdi-stop"></i> <span data-key="t-widgets" class="mr-4">Stop Opname</span> <span class="spinner-border flex-shrink-0 ml-4" data-key="t-new"></span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link menu-link" href="{{ url('so') }}">
+                    <i class="mdi mdi-clipboard"></i> <span data-key="t-widgets" class="mr-4">Form Stok Opname</span> 
+                </a>
+            </li>
+            @endif
             <li class="menu-title"><span data-key="t-menu">-----------------------------------</span></li>
             <li class="nav-item">
                 <a class="nav-link menu-link" href="javascript:void(0)" onclick="logout()">
