@@ -2,20 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Auth;
+use DB;
+use App\Imports\CycleCount\CycleCountImport;
+use Maatwebsite\Excel\Facades\Excel;
+use Yajra\Datatables\Datatables;
+use Session;
 
-class HomeController extends Controller
+class ReportController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
 
     public function index()
     {
@@ -33,18 +30,18 @@ class HomeController extends Controller
             11 => 'November',
             12 => 'Desember',
         ];
+        $master = DB::table('profit')
+                ->where('tahun', (int)date('Y'))
+                ->get();
 
         $counting = DB::table('master_pengeluaran_item')
-        ->whereYear('created_pengeluaran_at', (int)date('Y'))
-        ->get();
-
-        $master = DB::table('profit')
-            ->where('tahun', (int)date('Y'))
-            ->get();
+                ->whereYear('created_pengeluaran_at', (int)date('Y'))
+                ->get();
 
         foreach ($bulan as $key => $value) {
-            $counting_penjualan[] = $counting->where('pariode', $key)->sum('qty') ?? 0;
+            // dd($key);
             $data[]               = $master->where('pariode', $key)->first()->profit ?? 0;
+            $counting_penjualan[] = $counting->where('pariode', $key)->sum('qty') ?? 0;
         }
 
         $series = [
@@ -54,7 +51,6 @@ class HomeController extends Controller
             ],
         ];
         $series = json_encode($series);
-
 
         $series_count_penjualan = [
             [
@@ -71,11 +67,11 @@ class HomeController extends Controller
 
         foreach ($dataChart as $key => $value) {
             $d = DB::table('master_item')
-            ->select('frame', 'warna',  DB::raw('SUM(qty) as qty'))
-            ->join('master_pengeluaran_item', 'master_item.id', '=', 'master_pengeluaran_item.id_item')
-            ->where('id_item', $key)
-            ->groupBy('id_item')
-            ->get();
+                ->select('frame', 'warna',  DB::raw('SUM(qty) as qty'))
+                ->join('master_pengeluaran_item', 'master_item.id', '=', 'master_pengeluaran_item.id_item') 
+                ->where('id_item', $key)
+                ->groupBy('id_item')
+                ->get();
             foreach ($d as $y) {
                 $my_chart[] = [
                     'name' => $y->frame . ' ' . $y->warna,
@@ -85,6 +81,6 @@ class HomeController extends Controller
         }
         $my_chart = json_encode($my_chart);
 
-        return view('home', compact('series', 'series_count_penjualan', 'my_chart'));
+        return view('report.index', compact('series', 'series_count_penjualan', 'my_chart'));
     }
 }

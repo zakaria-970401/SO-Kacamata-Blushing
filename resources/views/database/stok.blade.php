@@ -27,8 +27,10 @@
                     </p>
                     <p class="card-text text-muted">By : {{ $item->count_by }}
                     </p>
+                    @if(Auth::user()->auth_group == 1)
                     <a href="javascript:void(0)" onclick="editStok('{{ $item->id }}')"
                         class="btn btn-primary btn-sm">Edit</a>
+                    @endif
                 </div>
             </div>
         @endforeach

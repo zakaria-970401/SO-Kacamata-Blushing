@@ -6,6 +6,8 @@ use App\Http\Controllers\SuperAdminController;
 use App\Http\Controllers\KedatanganController;
 use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\StokOpnameController;
+use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,6 +68,20 @@ Route::prefix('so/')->group(function () {
     Route::POST('compareQty', [StokOpnameController::class, 'compareQty']);
     Route::POST('postQty', [StokOpnameController::class, 'postQty']);
     Route::get('cariData/{tgl_mulai}/{tgl_selesai}', [StokOpnameController::class, 'cariData']);
+});
+
+Route::prefix('permission/')->group(function () {
+    Route::get('/', [PermissionController::class, 'index'])->name('permissions.index');
+    Route::post('/add', [PermissionController::class, 'store'])->name('permission.add');
+    Route::post('/add_group', [PermissionController::class, 'add_group'])->name('permission.add_group');
+    Route::get('/lihat_permission/{id}', [PermissionController::class, 'lihat_permission']);
+    Route::post('/add_group_permission', [PermissionController::class, 'add_group_permission'])->name('permission.add_group_permission');
+    Route::get('/hapus_permission/{kategori}/{id}', [PermissionController::class, 'hapus_permission']);
+    Route::get('/update_permission/{kategori}/{nama}/{id}', [PermissionController::class, 'update_permission']);
+});
+
+Route::prefix('report/')->group(function () {
+    Route::get('/', [ReportController::class, 'index']);
 });
 
 Route::POST('change-password', [SuperAdminController::class, 'change_password']);

@@ -182,7 +182,7 @@
             var html =
                 `<tr>
                     <td>
-                        <select class="form-control" name="frame[]" required>
+                        <select class="form-control" id="frameSelect" name="frame[]" required style="width: 100%";>
                             <option value="" disabled selected>SILAHKAN PILIH</option>
                             @foreach($data->groupBy('frame') as $list => $key)
                                 <option value="{{ $list }}">{{ $list }}</option>
@@ -190,7 +190,7 @@
                         </select>
                         </td>
                         <td>
-                            <select class="form-control" name="warna[]" required>
+                            <select class="form-control" id="warnaSelect" name="warna[]" required style="width: 100%";>>
                                 <option value="" disabled selected>SILAHKAN PILIH</option>
                                 @foreach($data->groupBy('warna') as $item => $key)
                                     <option value="{{ $item }}">{{ $item }}</option>
@@ -211,7 +211,11 @@
                     </td>
                 </tr>
                 `;
+                
+                
             $("#addProduct").click(function() {
+                $('#frameSelect').select2();
+                $('#warnaSelect').select2();
                 $('tbody').append(html);
                 $('.float-end').removeClass('hide')
             });

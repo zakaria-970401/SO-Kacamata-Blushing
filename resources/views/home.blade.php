@@ -12,8 +12,11 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-12">
-            <div id="container"></div>
+        <div class="col-sm-6 mb-4">
+            <div id="container" style="width: 100%;"></div>
+        </div>
+        <div class="col-sm-6 mb-4">
+              <div id="pie" style="border-radius: 16px;"></div>
         </div>
     </div>
 
@@ -24,6 +27,43 @@
     <script src="https://code.highcharts.com/modules/accessibility.js"></script>
 
     <script>
+         Highcharts.chart('pie', {
+            chart: {
+                  plotBackgroundColor: null,
+                  plotBorderWidth: null,
+                  plotShadow: false,
+                  type: 'pie'
+            },
+            title: {
+                  text: "Persentase Penjualan Kacamata Per Item Tahun {{ date('Y') }}"
+            },
+            tooltip: {
+                  pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            accessibility: {
+                  point: {
+                        valueSuffix: '%'
+                  }
+            },
+            credits: {
+                enabled: false
+            },
+            plotOptions: {
+                  pie: {
+                        allowPointSelect: true,
+                        cursor: 'pointer',
+                        dataLabels: {
+                        enabled: true,
+                        format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+                        }
+                  }
+            },
+            series: [{
+                  name: 'Persentase',
+                  colorByPoint: true,
+                  data: {!! $my_chart !!}
+            }]
+        });
         // Data retrieved https://en.wikipedia.org/wiki/List_of_cities_by_average_temperature
         Highcharts.chart('container', {
             chart: {
@@ -69,7 +109,7 @@
                     }
                 }
             },
-            series: {!! $series !!}
+            series: {!! $series_count_penjualan !!}
         });
     </script>
 @endsection

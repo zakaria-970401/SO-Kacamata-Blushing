@@ -28,16 +28,32 @@ class PengeluaranController extends Controller
             ->whereIn('warna', $request->warna)
             ->get();
 
+        $stok_before = DB::table('master_stok_item')
+            ->whereIn('id_item', $master->pluck('id'))
+            ->get();
+
         for ($i = 0; $i < count($master); $i++) {
             $harga_jual[]  = $master[$i]->harga_jual * $request->qty_pengeluaran[$i];
             $harga_pokok[] = $master[$i]->harga_pokok * $request->qty_pengeluaran[$i];
             DB::table('master_pengeluaran_item')
                 ->insert([
                     'id_item' => $master[$i]->id,
+                    'qty' => $request->qty_pengeluaran[$i],
+                    'pariode' => date('m'),
                     'created_pengeluaran_at' => date('Y-m-d H:i:s'),
                     'created_pengeluaran_by' => Auth::user()->name,
                 ]);
+
+            DB::table('master_stok_item')
+            ->where('id_item', $master[$i]->id)
+                ->update([
+                    'stok_before' => $stok_before[$i]->stok_after,
+                    'stok_after' => $stok_before[$i]->stok_after - $request->qty_pengeluaran[$i],
+                    'updated_count_at' => date('Y-m-d H:i:s'),
+                    'updated_count_by' => Auth::user()->name
+                ]);
         }
+
         $check_profit = DB::table('profit')
             ->where('pariode', (int)date('m'))
             ->where('tahun', (int)date('Y'))
