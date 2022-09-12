@@ -14,49 +14,51 @@ use Session;
 class StokOpnameController extends Controller
 {
 
-    public function start(){
+    public function start()
+    {
         $check = DB::table('master_stokopname')
-        ->whereYear('created_at', date('Y'))
-        ->whereMonth('created_at', date('m'))
-        ->count();
+            ->whereYear('created_at', date('Y'))
+            ->whereMonth('created_at', date('m'))
+            ->count();
 
-        if($check == 0){
+        if ($check == 0) {
             DB::table('master_stokopname')->insert([
                 'created_at' => date('Y-m-d H:i:s'),
                 'created_by' => Auth::user()->name,
                 'status'   => 1
             ]);
-        }else{
+        } else {
             $check = DB::table('master_stokopname')
-            ->whereYear('created_at', date('Y'))
-            ->whereMonth('created_at', date('m'))
-            ->update([
-                'status'    => 1
-            ]);
+                ->whereYear('created_at', date('Y'))
+                ->whereMonth('created_at', date('m'))
+                ->update([
+                    'status'    => 1
+                ]);
         }
 
         Session::flash('success', 'Stok Opname Berhasil Di start');
         return back();
     }
 
-    public function stop(){
+    public function stop()
+    {
         $check = DB::table('master_stokopname')
-        ->whereYear('created_at', date('Y'))
-        ->whereMonth('created_at', date('m'))
-        ->count();
+            ->whereYear('created_at', date('Y'))
+            ->whereMonth('created_at', date('m'))
+            ->count();
 
-        if($check == 0){
+        if ($check == 0) {
             DB::table('master_stokopname')->insert([
                 'created_at' => date('Y-m-d H:i:s'),
                 'created_by' => Auth::user()->name,
                 'status'   => 0
             ]);
-        }else{
+        } else {
             $check = DB::table('master_stokopname')
-            ->whereYear('created_at', date('Y'))
-            ->whereMonth('created_at', date('m'))->update([
-                'status'    => 0
-            ]);
+                ->whereYear('created_at', date('Y'))
+                ->whereMonth('created_at', date('m'))->update([
+                    'status'    => 0
+                ]);
         }
         Session::flash('success', 'Stok Opname Berhasil Di start');
         return back();
@@ -70,37 +72,37 @@ class StokOpnameController extends Controller
     public function getList()
     {
         $item = DB::table('master_item')
-        ->select(
-            'master_item.frame',
-            'master_item.warna',
-            'master_stok_item.*',
-        )
+            ->select(
+                'master_item.frame',
+                'master_item.warna',
+                'master_stok_item.*',
+            )
             ->join('master_stok_item', 'master_item.id', '=', 'master_stok_item.id_item')
             ->get();
         $item->map(function ($item) {
             $item->status_hitungan = DB::table('transaksi_stokopname')->where('id_item', $item->id_item)->count();
-                return $item;
+            return $item;
         });
         $item = $item->where('status_hitungan', 0);
 
         return response()->json([
             'status' => 'ok',
             'data' => $item
-        ]);   
+        ]);
     }
 
     public function compareQty(Request $request)
     {
         $stok = DB::table('master_stok_item')
-        ->where('id_item', $request->id_item)
-        ->first()->stok_after;
+            ->where('id_item', $request->id_item)
+            ->first()->stok_after;
 
-        if((int)$stok == (int)$request->qty){
+        if ((int)$stok == (int)$request->qty) {
             return response()->json([
                 'status' => 'ok',
                 'data' => 'ok'
             ]);
-        }else{
+        } else {
             return response()->json([
                 'status' => 'diff',
                 'data' => 'ok'
@@ -108,10 +110,11 @@ class StokOpnameController extends Controller
         }
     }
 
-    public function postQty(Request $request){
+    public function postQty(Request $request)
+    {
         $stok = DB::table('master_stok_item')
-        ->where('id_item', $request->id_item)
-        ->first();
+            ->where('id_item', $request->id_item)
+            ->first();
 
         DB::table('master_stok_item')
             ->where('id_item', $request->id_item)
@@ -127,29 +130,30 @@ class StokOpnameController extends Controller
             ->insert([
                 'id_stokopname' => $id_opname,
                 'id_item'   => $request->id_item,
-                'stok_after' => $request->qty,
+                'qty' => $request->qty,
                 'created_at' => date('Y-m-d H:i:s'),
                 'created_by' => Auth::user()->name
             ]);
 
-            return response()->json([
-                'status' => 'ok'
-            ]);
+        return response()->json([
+            'status' => 'ok'
+        ]);
     }
 
-    public function cariData($tgl_mulai, $tgl_selesai){
+    public function cariData($tgl_mulai, $tgl_selesai)
+    {
         $data = DB::table('transaksi_stokopname')
-        ->select(
-            'master_item.frame',
-            'master_item.warna',
-            'transaksi_stokopname.qty',
-            'transaksi_stokopname.created_at',
-            'transaksi_stokopname.created_by',
-        )
-        // ->join('transaksi_stokopname', 'master_stokopname.id', '=', 'transaksi_stokopname.id_opname')
-        ->join('master_item', 'transaksi_stokopname.id_item', '=', 'master_item.id')
-        ->whereBetween('transaksi_stokopname.created_at', [$tgl_mulai .' 00:00:00', $tgl_selesai .' 23:59:59'])
-        ->get();
+            ->select(
+                'master_item.frame',
+                'master_item.warna',
+                'transaksi_stokopname.qty',
+                'transaksi_stokopname.created_at',
+                'transaksi_stokopname.created_by',
+            )
+            // ->join('transaksi_stokopname', 'master_stokopname.id', '=', 'transaksi_stokopname.id_opname')
+            ->join('master_item', 'transaksi_stokopname.id_item', '=', 'master_item.id')
+            ->whereBetween('transaksi_stokopname.created_at', [$tgl_mulai . ' 00:00:00', $tgl_selesai . ' 23:59:59'])
+            ->get();
 
         return response()->json([
             'status' => 'ok',

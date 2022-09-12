@@ -70,7 +70,7 @@
                 type: 'spline'
             },
             title: {
-                text: 'Profit Penjualan'
+                text: 'Total Penjualan'
             },
             subtitle: {
                 text: 'Kacamata Blushing Store'
