@@ -42,6 +42,7 @@ Route::prefix('master')->group(function () {
 
     Route::get('/stok', [SuperAdminController::class, 'masterStok']);
     Route::GET('/updateStok/{qty}/{id}', [SuperAdminController::class, 'updateStok']);
+    Route::get('/invoice', [SuperAdminController::class, 'masterInvoice']);
 });
 
 Route::prefix('kedatangan/')->group(function () {

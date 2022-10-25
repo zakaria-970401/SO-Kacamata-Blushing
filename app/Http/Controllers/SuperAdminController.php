@@ -183,4 +183,9 @@ class SuperAdminController extends Controller
         Session::flash('success', 'Stok berhasil diubah');
         return back();
     }
+
+    public function masterInvoice(){
+        $data = DB::table('invoice')->groupBy('no_invoice')->get();
+        return view('database.invoice', compact('data'));
+    }
 }
