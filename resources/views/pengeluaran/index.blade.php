@@ -126,7 +126,7 @@
                                                 confirmButtonText: 'Ok'
                                             }).then((result) => {
                                                 if (result.isConfirmed) {
-                                                    location.reload();
+                                                    location.href = "{{ url('pengeluaran/invoice')}}/" + response.data 
                                                 }
                                             })
                                         }

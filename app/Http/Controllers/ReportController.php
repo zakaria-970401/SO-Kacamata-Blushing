@@ -39,7 +39,6 @@ class ReportController extends Controller
                 ->get();
 
         foreach ($bulan as $key => $value) {
-            // dd($key);
             $data[]               = $master->where('pariode', $key)->first()->profit ?? 0;
             $counting_penjualan[] = $counting->where('pariode', $key)->sum('qty') ?? 0;
         }
@@ -77,8 +76,35 @@ class ReportController extends Controller
                     'name' => $y->frame . ' ' . $y->warna,
                     'y' => (int)$y->qty
                 ];
+
+                $frame[] = 
+                [
+                    'name' => $y->frame . ' ' . $y->warna,
+                    'data' => [
+                        (int)$y->qty,
+                    ],
+                ];
             }
         }
+
+        foreach($bulan as $key =>  $value){
+            $check[] = DB::table('master_item')
+            ->select('frame', 'warna',  DB::raw('SUM(qty) as qty'))
+            ->join('master_pengeluaran_item', 'master_item.id', '=', 'master_pengeluaran_item.id_item') 
+            ->whereMonth('created_pengeluaran_at', $key)
+            ->groupBy('id_item')
+            ->get();
+                // foreach ($check as $y) {
+                //     $frame[] = 
+                //     [
+                //         'name' => $y->frame . ' ' . $y->warna ?? '-',
+                //         'data' => [
+                //             (int)$y->qty ?? 0,
+                //         ],
+                //     ];
+                // }
+        }
+        // dd($check);
         $my_chart = json_encode($my_chart);
 
         return view('report.index', compact('series', 'series_count_penjualan', 'my_chart'));

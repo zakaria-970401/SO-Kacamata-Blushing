@@ -46,6 +46,10 @@ $permission = DB::table('auth_group_permission')
                             <a href="{{ url('master/item') }}" class="nav-link" data-key="t-analytics"> Item
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ url('master/invoice') }}" class="nav-link" data-key="t-analytics"> Invoice
+                            </a>
+                        </li>
                         @endif
                         @if(in_array('master-stok', $permission))
                         <li class="nav-item">

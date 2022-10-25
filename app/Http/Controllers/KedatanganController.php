@@ -10,6 +10,7 @@ use App\Imports\CycleCount\CycleCountImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\Datatables\Datatables;
 use Session;
+use Illuminate\Support\Str;
 
 class KedatanganController extends Controller
 {
@@ -33,17 +34,45 @@ class KedatanganController extends Controller
             ->whereIn('id_item', $id_item)
             ->get()->pluck('stok_after')->toArray();
 
+            $job = DB::table('invoice')
+                ->whereYear('created_at', date('Y'))
+                ->whereMonth('created_at', date('m'))
+                ->where('type', 'in')
+                ->max("no_invoice");
+
+        if (is_null($job)) {
+            $increment = 1;
+        } else {
+            $increment = substr($job, 7, 4) + 1;
+        }
+        $no_invoice = '3' . date('Y') . Str::of(date('m'))->padLeft(2, '0') . Str::of($increment)->padLeft(4, '0');
+
         for ($i = 0; $i < count($id_item); $i++) {
             DB::table('master_stok_item')
                 ->where('id_item', $id_item[$i])
                 ->update([
                     'stok_before' => $stok_lama[$i],
                     'stok_after' => $request->qty_kedatangan[$i] + $stok_lama[$i],
+                    'vendor' => $request->vendor[$i],
                     'updated_count_at' => date('Y-m-d H:i:s'),
                     'updated_count_by' => Auth::user()->name
                 ]);
+
+                //insert to invoice
+                DB::table('invoice')->insert([
+                    'no_invoice' => $no_invoice,
+                    'id_item' => $id_item[$i],
+                    'type' => 'in',
+                    'qty' => $request->qty_kedatangan[$i],
+                    'vendor' => $request->vendor[$i],
+                    'created_at' => date('Y-m-d h:i:s'),
+                    'created_by' => Auth::user()->name
+                ]);
         }
+        
+        $no_invoice = DB::table('invoice')->where('no_invoice', $no_invoice)->first()->no_invoice;
         return response()->json([
+            'data' => $no_invoice,
             'status' => 'ok'
         ]);
     }
@@ -228,5 +257,19 @@ class KedatanganController extends Controller
         ]);
         Session::flash('success', 'Stok berhasil diubah');
         return back();
+    }
+
+    public function invoice($no_invoice){
+        $data = DB::table('invoice')
+            ->where('no_invoice', $no_invoice)
+            ->get();
+        $data->map(function ($value){
+            $value->frame = DB::table('master_item')->where('id', $value->id_item)->first()->frame ?? '-';
+            $value->warna = DB::table('master_item')->where('id', $value->id_item)->first()->warna ?? '-';
+            $value->harga = DB::table('master_item')->where('id', $value->id_item)->first()->harga_pokok ?? '-';
+        });
+        $total_harga = $data->sum('harga');
+
+        return view('kedatangan.invoice', compact('data', 'total_harga'));
     }
 }

@@ -28,6 +28,7 @@
                                         <th scope="col">Warna</th>
                                         <th scope="col">Qty Kedatangan</th>
                                         <th scope="col">Satuan</th>
+                                        <th scope="col">Vendor</th>
                                         <th scope="col">
                                             <a class="btn btn-info" id="addProduct"><i
                                                     class="mdi mdi-plus-box mdi-2x"></i> Add
@@ -109,8 +110,9 @@
                                 <td>${i+1}</td>
                                 <td>${item.frame}</td>
                                 <td>${item.warna}</td>
+                                <td>${item.qty}</td>
                                 <td>
-                                    <input type="text" name="qty[]" class="form-control" value="${item.stok_after}">
+                                    <input type="hidden" name="qty[]" class="form-control" value="${item.stok_after}">
                                     <input type="hidden" name="id_transaksi[]" class="form-control" value="${item.id}">
                                 </td>
                             </tr>
@@ -137,6 +139,7 @@
             dataType : 'json',
             success : function(response) {
                 if (response.status == 'ok') {
+                    console.log(response.data);
                      $.ajax({
                             url : "{{ url('kedatangan/postKedatangan') }}",
                             type : "POST",
@@ -151,7 +154,7 @@
                                         confirmButtonText: 'Ok'
                                     }).then((result) => {
                                         if (result.isConfirmed) {
-                                            location.reload();
+                                            location.href = "{{url('kedatangan/invoice')}}/" + response.data
                                         }
                                     })
                                 }
@@ -203,9 +206,16 @@
                                 class="form-control" name="qty_kedatangan[]" id="" aria-describedby="helpId" placeholder="Silahkan isi" required>
                             </div>
                         </td>
-                    <td>
-                        Pcs
-                    </td>
+                        <td>
+                            Pcs
+                        </td>
+                        <td>
+                            <select class="form-control" id="vendorSelect" name="vendor[]" required style="width: 100%";>>
+                                <option value="" disabled selected>SILAHKAN PILIH</option>
+                                <option value="Alibaba">Alibaba</option>
+                                <option value="Kawan Lama">Kawan Lama</option>
+                            </select>
+                        </td>
                     <td>
                         <button class="btn btn-danger remove"><i class="mdi mdi-trash-can-outline" aria-hidden="true"></i> Delete</button>
                     </td>

@@ -10,9 +10,18 @@
         }
     </style>
     <div class="row">
+        <div class="card">
+            <div class="card-body">
+                <div class="col-sm-8">
+                    <input type="text" class="form-control searchbox"  placeholder="Pencarian Item...">
+                </div>
+            </div>
+        </div>
+        </div>
+        <div class="row">
         @foreach ($data as $item)
-            <div class="col-sm-3">
-                <div class="card card-body" style="border-radius: 23px;">
+            <div class="col-sm-3" id="myitem">
+                <div class="card card-body card-item" style="border-radius: 23px;">
                     <div class="d-flex mb-4 align-items-center">
                         <div class="flex-grow-1 ms-2">
                             <h3 class="card-title mb-1">{{ $item->frame }}</h3>
@@ -51,5 +60,29 @@
                 return false;
             }
         }
+
+        var $targets = $('.card-item');
+
+        $('.searchbox').on('input', function () {
+        $targets.show();
+        
+        var text = $(this).val().toLowerCase();   
+        if (text) {      
+            $targets.filter(':visible').each(function () {
+                var $target = $(this);
+                var $matches = 0;
+                // Search only in targeted element
+                $target.find('card-title').add($target).each(function () {            
+                    if ($(this).text().toLowerCase().indexOf("" + text + "") !== -1) {
+                    $matches++;
+                    }
+                });
+                if ($matches === 0) {
+                    $target.hide();
+                }
+            });
+        }
+        })
+
     </script>
 @endsection

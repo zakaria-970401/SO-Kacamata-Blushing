@@ -10,6 +10,7 @@ use App\Imports\CycleCount\CycleCountImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Yajra\Datatables\Datatables;
 use Session;
+use Illuminate\Support\Str;
 
 class PengeluaranController extends Controller
 {
@@ -32,6 +33,19 @@ class PengeluaranController extends Controller
             ->whereIn('id_item', $master->pluck('id'))
             ->get();
 
+        $job = DB::table('invoice')
+            ->whereYear('created_at', date('Y'))
+            ->whereMonth('created_at', date('m'))
+            ->where('type', 'out')
+            ->max("no_invoice");
+
+        if (is_null($job)) {
+            $increment = 1;
+        } else {
+            $increment = substr($job, 7, 4) + 1;
+        }
+        $no_invoice = '3' . date('Y') . Str::of(date('m'))->padLeft(2, '0') . Str::of($increment)->padLeft(4, '0');
+
         for ($i = 0; $i < count($master); $i++) {
             $harga_jual[]  = $master[$i]->harga_jual * $request->qty_pengeluaran[$i];
             $harga_pokok[] = $master[$i]->harga_pokok * $request->qty_pengeluaran[$i];
@@ -52,6 +66,17 @@ class PengeluaranController extends Controller
                     'updated_count_at' => date('Y-m-d H:i:s'),
                     'updated_count_by' => Auth::user()->name
                 ]);
+
+            //insert to invoice
+                DB::table('invoice')->insert([
+                'no_invoice' => $no_invoice,
+                'id_item' => $master[$i]->id,
+                'type' => 'out',
+                'qty' => $request->qty_pengeluaran[$i],
+                // 'vendor' => $request->vendor[$i],
+                'created_at' => date('Y-m-d h:i:s'),
+                'created_by' => Auth::user()->name
+            ]);
         }
 
         $check_profit = DB::table('profit')
@@ -77,7 +102,10 @@ class PengeluaranController extends Controller
                     'profit'  => $check_profit->profit +  array_sum($harga_jual) - array_sum($harga_pokok),
                 ]);
         }
+
+        $no_invoice = DB::table('invoice')->where('no_invoice', $no_invoice)->first()->no_invoice;
         return response()->json([
+            'data' => $no_invoice,
             'status' => 'ok'
         ]);
     }
@@ -262,5 +290,20 @@ class PengeluaranController extends Controller
         ]);
         Session::flash('success', 'Stok berhasil diubah');
         return back();
+    }
+
+    public function invoice($no_invoice){
+        $data = DB::table('invoice')
+            ->where('no_invoice', $no_invoice)
+            ->get();
+
+        $data->map(function ($value){
+            $value->frame = DB::table('master_item')->where('id', $value->id_item)->first()->frame ?? '-';
+            $value->warna = DB::table('master_item')->where('id', $value->id_item)->first()->warna ?? '-';
+            $value->harga_pokok = DB::table('master_item')->where('id', $value->id_item)->first()->harga_pokok ?? '-';
+            $value->harga_jual = DB::table('master_item')->where('id', $value->id_item)->first()->harga_jual ?? '-';
+        });
+
+        return view('pengeluaran.invoice', compact('data'));
     }
 }
