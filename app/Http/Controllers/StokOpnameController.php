@@ -133,11 +133,12 @@ class StokOpnameController extends Controller
         $stok = DB::table('master_stok_item')
             ->where('id_item', $request->id_item)
             ->first();
+
         DB::table('master_stok_item')
             ->where('id_item', $request->id_item)
             ->update([
-                'stok_before' => $stok->stok_before,
-                'stok_after' => $request->qty,
+                // 'stok_before' => $stok->stok_before,
+                'stok' => $request->qty,
                 'count_at' => date('Y-m-d H:i:s'),
                 'count_by' => Auth::user()->name
             ]);
@@ -147,7 +148,7 @@ class StokOpnameController extends Controller
             ->insert([
                 'id_stokopname' => $id_opname,
                 'id_item'   => $request->id_item,
-                'stok_sistem' => $stok->stok_before,
+                'stok_sistem' => $stok->stok,
                 'stok_actual' => $request->qty,
                 'created_at' => date('Y-m-d H:i:s'),
                 'created_by' => Auth::user()->name
