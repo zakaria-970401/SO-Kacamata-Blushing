@@ -73,7 +73,7 @@
                                         <p class="text-muted">Form Sign in</p>
                                     </div>
                                     <div class="p-2 mt-4">
-                                        <form id="doLogin">
+                                        <form id="doLogin" autocomplete="off">
                                             <div class="mb-3">
                                                 <label for="username" class="form-label">Username</label>
                                                 <input type="text" required class="form-control" id="username"

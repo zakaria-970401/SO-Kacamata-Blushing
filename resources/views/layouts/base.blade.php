@@ -32,8 +32,9 @@
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"
         integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="//cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css">
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.12.1/b-2.2.3/b-html5-2.2.3/datatables.min.css"/>
- 
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/v/dt/dt-1.12.1/b-2.2.3/b-html5-2.2.3/datatables.min.css" />
+
 
     <style type="text/css">
         .hide {
@@ -79,15 +80,14 @@
                         <div class="row">
                             <div class="col-sm-12">
                                 <div class="form-group">
-                                    <input type="password" name="password" id="" class="form-control Password"
+                                    <input type="password" name="password" class="form-control Password"
                                         placeholder="Masukan Password Baru" aria-describedby="helpId" required>
                                 </div>
                             </div>
                             <div class="col-sm-12 mt-4">
                                 <div class="form-group">
-                                    <input type="password" name="password_konfirm" id=""
-                                        class="form-control Password" placeholder="Konfirmasi Password"
-                                        aria-describedby="helpId" required>
+                                    <input type="password" name="password_konfirm" class="form-control Password"
+                                        placeholder="Konfirmasi Password" aria-describedby="helpId" required>
                                 </div>
                                 <input type="checkbox" class="ml-4 mr-4 mt-4" id="showPass"> Show Password
                             </div>
@@ -104,55 +104,59 @@
 
     <div class="modal fade" id="hasil-stokopname" tabindex="-1" role="dialog" aria-labelledby="modelTitleId"
         aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Hasil Stok Opaname</h5>
                 </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                  <input type="date"
-                                    class="form-control" name="" id="tanggalMulai" aria-describedby="helpId" placeholder="">
-                                  <small id="helpId" class="form-text text-muted">Tanggal Mulai</small>
-                                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="date" class="form-control" name="" id="tanggalMulai"
+                                    aria-describedby="helpId" placeholder="">
+                                <small id="helpId" class="form-text text-muted">Tanggal Mulai</small>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                  <input type="date"
-                                    class="form-control" name="" id="tanggalSelesai" aria-describedby="helpId" placeholder="">
-                                  <small id="helpId" class="form-text text-muted">Tanggal Mulai</small>
-                                </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <input type="date" class="form-control" name="" id="tanggalSelesai"
+                                    aria-describedby="helpId" placeholder="">
+                                <small id="helpId" class="form-text text-muted">Tanggal Mulai</small>
                             </div>
-                            <div class="col-sm-12 mt-4">
-                                 <div class="table-responsive">
+                        </div>
+                        <div class="col-sm-12 mt-4">
+                            <div class="table-responsive">
                                 <table class="table align-middle table-nowrap" id="itemTable">
                                     <thead class="table-light">
                                         <tr class="text-center">
                                             <th>NO.</th>
+                                            <th>STATUS</th>
                                             <th>FRAME</th>
                                             <th>WARNA</th>
-                                            <th>QTY</th>
+                                            <th>STOCK ON SISTEM</th>
+                                            <th>STOCK ON ACTUAL</th>
+                                            <th>SELISIH</th>
                                             <th>COUNT TIME</th>
                                             <th>COUNT BY</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    
+
                                     </tbody>
                                 </table>
                             </div>
-                            </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary btnCari btn-lg" onclick="cariHasil()"> Cari</button>
-                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary btnCari btn-lg" onclick="cariHasil()">
+                        Cari</button>
                 </div>
             </div>
         </div>
+    </div>
 
 
 
@@ -171,10 +175,11 @@
     <script src="{{ url('assets/js/plugins.js') }}"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="//cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
-    
+
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.12.1/b-2.2.3/b-html5-2.2.3/datatables.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.12.1/b-2.2.3/b-html5-2.2.3/datatables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 
@@ -192,61 +197,72 @@
 
         var table_so = $('#itemTable').DataTable({
             dom: 'Bfrtip',
-             buttons: [
-                    'copy', 'excel', 'pdf'
-                ]
+            buttons: [
+                'copy', 'excel', 'pdf'
+            ]
         });
 
-        function cariHasil(){
+        function cariHasil() {
             $('.btnCari').attr('disabled', true);
             var tanggalMulai = $('#tanggalMulai').val();
             var tanggalSelesai = $('#tanggalSelesai').val();
-            if(tanggalMulai == '' || tanggalSelesai == ''){
+            if (tanggalMulai == '' || tanggalSelesai == '') {
                 Swal.fire({
                     icon: 'error',
                     title: 'Oops...',
                     text: 'Tanggal Mulai dan Tanggal Selesai Harus Diisi!',
                 });
                 $('.btnCari').attr('disabled', false);
-                }else{
-                    $.ajax({
-                        type: "GET",
-                        url: "{{ url('so/cariData/') }}/" + tanggalMulai + "/" + tanggalSelesai,
-                        data: {
-                            tanggalMulai: tanggalMulai,
-                            tanggalSelesai: tanggalSelesai
-                        },
-                        dataType: "JSON",
-                        success: function (response) {
-                            if(response.data.length > 0){
-                                $('.btnCari').attr('disabled', false);
-                                table_so.clear()
-                                    var no = 1;
-                                    $.each(response.data, function (index, value) { 
-                                        table_so.row.add([
-                                            no++,
-                                            value.frame,
-                                            value.warna,
-                                            value.qty + ' Pcs',
-                                            formatTanggalWaktuIndonesia2(value.created_at),
-                                            value.created_by
-                                        ]).draw();
-                                });
-                            }else{
-                                $('.btnCari').attr('disabled', false);
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Oops...',
-                                    text: 'Data Tidak Ditemukan!',
-                                });
-                            }
-                        },
-                        error: function(error){
+            } else {
+                $.ajax({
+                    type: "GET",
+                    url: "{{ url('so/cariData/') }}/" + tanggalMulai + "/" + tanggalSelesai,
+                    data: {
+                        tanggalMulai: tanggalMulai,
+                        tanggalSelesai: tanggalSelesai
+                    },
+                    dataType: "JSON",
+                    success: function(response) {
+                        if (response.data.length > 0) {
                             $('.btnCari').attr('disabled', false);
+                            table_so.clear()
+                            var no = 1;
+                            var status_selisih = '';
+                            $.each(response.data, function(index, value) {
+                                if (value.stok_sistem == value.stok_actual) {
+                                    status_selisih =
+                                        `<span class="badge border border-success text-success">SESUAI</span>`
+                                } else {
+                                    status_selisih =
+                                        `<span class="badge border border-danger text-danger">SELISIH</span>`
+                                }
+                                table_so.row.add([
+                                    no++,
+                                    status_selisih,
+                                    value.frame,
+                                    value.warna,
+                                    value.stok_sistem + ' Pcs',
+                                    value.stok_actual + ' Pcs',
+                                    value.stok_actual - value.stok_sistem + ' Pcs',
+                                    formatTanggalWaktuIndonesia2(value.created_at),
+                                    value.created_by
+                                ]).draw();
+                            });
+                        } else {
+                            $('.btnCari').attr('disabled', false);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops...',
+                                text: 'Data Tidak Ditemukan!',
+                            });
                         }
-                    });
-                }
+                    },
+                    error: function(error) {
+                        $('.btnCari').attr('disabled', false);
+                    }
+                });
             }
+        }
 
 
         $('#showPass').on('click', function() {
@@ -335,14 +351,16 @@
             }
         }
 
-        function formatTanggalWaktuIndonesia2(tanggal)
-        {
+        function formatTanggalWaktuIndonesia2(tanggal) {
             var formated;
             const today = new Date(tanggal);
-            const bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-            formated = kasihNol(today.getDate()) + ' ' + bulan[today.getMonth()] + ' ' + kasihNol(today.getFullYear()) + ' ' + kasihNol(today.getHours()) + ':' + kasihNol(today.getMinutes()) + ':' + kasihNol(today.getSeconds());
+            const bulan = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September',
+                'Oktober', 'November', 'Desember'
+            ];
+            formated = kasihNol(today.getDate()) + ' ' + bulan[today.getMonth()] + ' ' + kasihNol(today.getFullYear()) +
+                ' ' + kasihNol(today.getHours()) + ':' + kasihNol(today.getMinutes()) + ':' + kasihNol(today.getSeconds());
 
-            if(tanggal == null || tanggal == '') {
+            if (tanggal == null || tanggal == '') {
                 formated = '';
             }
 

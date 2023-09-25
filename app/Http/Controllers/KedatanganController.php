@@ -18,7 +18,6 @@ class KedatanganController extends Controller
     public function index()
     {
         $data = DB::table('master_item')
-            ->join('master_stok_item', 'master_item.id', '=', 'master_stok_item.id_item')
             ->get();
         return view('kedatangan.index', compact('data'));
     }
@@ -29,50 +28,44 @@ class KedatanganController extends Controller
             ->whereIn('frame', $request->frame)
             ->whereIn('warna', $request->warna)
             ->get()->pluck('id')->toArray();
-
-        $stok_lama = DB::table('master_stok_item')
-            ->whereIn('id_item', $id_item)
-            ->get()->pluck('stok_after')->toArray();
-
-            $job = DB::table('invoice')
-                ->whereYear('created_at', date('Y'))
-                ->whereMonth('created_at', date('m'))
-                ->where('type', 'in')
-                ->max("no_invoice");
-
-        if (is_null($job)) {
-            $increment = 1;
-        } else {
-            $increment = substr($job, 7, 4) + 1;
-        }
-        $no_invoice = '3' . date('Y') . Str::of(date('m'))->padLeft(2, '0') . Str::of($increment)->padLeft(4, '0');
+        $kode_kedatangan = Str::random(10);
 
         for ($i = 0; $i < count($id_item); $i++) {
             DB::table('master_stok_item')
-                ->where('id_item', $id_item[$i])
-                ->update([
-                    'stok_before' => $stok_lama[$i],
-                    'stok_after' => $request->qty_kedatangan[$i] + $stok_lama[$i],
+                ->insert([
+                    'id_item' => $id_item[$i],
+                    'kode_kedatangan' => $kode_kedatangan,
+                    'stok' => $request->qty_kedatangan[$i],
                     'vendor' => $request->vendor[$i],
                     'updated_count_at' => date('Y-m-d H:i:s'),
                     'updated_count_by' => Auth::user()->name
                 ]);
 
-                //insert to invoice
-                DB::table('invoice')->insert([
-                    'no_invoice' => $no_invoice,
+            $lasting = DB::table('report_transaksi')
+                ->where('id_item', $id_item[$i])
+                ->orderBy('id', 'DESC')
+                ->first();
+
+            if (is_null($lasting)) {
+                $last = 0;
+            } else {
+                $last = $lasting->balance;
+            }
+
+            DB::table('report_transaksi')
+                ->insert([
                     'id_item' => $id_item[$i],
+                    'kode_kedatangan' => $kode_kedatangan,
                     'type' => 'in',
                     'qty' => $request->qty_kedatangan[$i],
-                    'vendor' => $request->vendor[$i],
-                    'created_at' => date('Y-m-d h:i:s'),
+                    'balance' => $last + $request->qty_kedatangan[$i],
+                    'created_at' => date('Y-m-d H:i:s'),
                     'created_by' => Auth::user()->name
                 ]);
         }
-        
-        $no_invoice = DB::table('invoice')->where('no_invoice', $no_invoice)->first()->no_invoice;
+
         return response()->json([
-            'data' => $no_invoice,
+            'data' => $kode_kedatangan,
             'status' => 'ok'
         ]);
     }
@@ -111,20 +104,43 @@ class KedatanganController extends Controller
     {
         $data = DB::table('master_stok_item')
             ->whereIn('id', $request->id_transaksi)
-            ->get()->toArray();
+            ->get();
+        $id_item = $data->pluck('id_item')->toArray();
+        $kode_kedatangan = $data->pluck('kode_kedatangan')->toArray();
 
-        for ($i = 0; $i < count($data); $i++) {
+        for ($i = 0; $i < count($id_item); $i++) {
             DB::table('master_stok_item')
-                ->where('id', $data[$i]->id)
+                ->where('id', $id_item[$i])
                 ->update([
-                    'stok_before' => $data[$i]->stok_after,
-                    'stok_after' => $request->qty[$i],
+                    'stok' => $request->qty[$i],
                     'updated_count_at' => date('Y-m-d H:i:s'),
                     'updated_count_by' => Auth::user()->name
                 ]);
+
+            $lasting = DB::table('report_transaksi')
+                ->where('id_item', $id_item[$i])
+                ->orderBy('id', 'DESC')
+                ->first();
+
+            if (is_null($lasting)) {
+                $last = 0;
+            } else {
+                $last = $lasting->balance;
+            }
+
+            DB::table('report_transaksi')
+                ->where('id', $id_item[$i])
+                ->where('kode_kedatangan', $kode_kedatangan[$i])
+                ->update([
+                    'qty' => $request->qty[$i],
+                    'balance' => $last + $request->qty[$i],
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'created_by' => Auth::user()->name
+                ]);
         }
+
         Session::flash('success', 'Data berhasil Di Update..');
-        return back();
+        return redirect('kedatangan/report/' . $data->first()->kode_kedatangan);
     }
 
     public function showItem($id)
@@ -259,17 +275,16 @@ class KedatanganController extends Controller
         return back();
     }
 
-    public function invoice($no_invoice){
-        $data = DB::table('invoice')
-            ->where('no_invoice', $no_invoice)
+    public function report($params)
+    {
+        $data = DB::table('master_stok_item')
+            ->where('kode_kedatangan', $params)
             ->get();
-        $data->map(function ($value){
-            $value->frame = DB::table('master_item')->where('id', $value->id_item)->first()->frame ?? '-';
-            $value->warna = DB::table('master_item')->where('id', $value->id_item)->first()->warna ?? '-';
-            $value->harga = DB::table('master_item')->where('id', $value->id_item)->first()->harga_pokok ?? '-';
+        $data->map(function ($value) {
+            $value->master_item = DB::table('master_item')->where('id', $value->id_item)->first() ?? '-';
+            return $value;
         });
-        $total_harga = $data->sum('harga');
 
-        return view('kedatangan.invoice', compact('data', 'total_harga'));
+        return view('kedatangan.report', compact('data'));
     }
 }

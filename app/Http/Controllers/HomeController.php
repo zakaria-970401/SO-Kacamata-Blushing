@@ -35,8 +35,8 @@ class HomeController extends Controller
         ];
 
         $counting = DB::table('master_pengeluaran_item')
-        ->whereYear('created_pengeluaran_at', (int)date('Y'))
-        ->get();
+            ->whereYear('created_at', (int)date('Y'))
+            ->get();
 
         $master = DB::table('profit')
             ->where('tahun', (int)date('Y'))
@@ -66,16 +66,16 @@ class HomeController extends Controller
 
         $my_chart = [];
         $dataChart = DB::table('master_pengeluaran_item')
-        ->whereYear('created_pengeluaran_at', (int)date('Y'))
-        ->get()->groupBy('id_item');
+            ->whereYear('created_at', (int)date('Y'))
+            ->get()->groupBy('id_item');
 
         foreach ($dataChart as $key => $value) {
             $d = DB::table('master_item')
-            ->select('frame', 'warna',  DB::raw('SUM(qty) as qty'))
-            ->join('master_pengeluaran_item', 'master_item.id', '=', 'master_pengeluaran_item.id_item')
-            ->where('id_item', $key)
-            ->groupBy('id_item')
-            ->get();
+                ->select('frame', 'warna',  DB::raw('SUM(qty) as qty'))
+                ->join('master_pengeluaran_item', 'master_item.id', '=', 'master_pengeluaran_item.id_item')
+                ->where('id_item', $key)
+                ->groupBy('id_item')
+                ->get();
             foreach ($d as $y) {
                 $my_chart[] = [
                     'name' => $y->frame . ' ' . $y->warna,

@@ -25,8 +25,8 @@
                                             <th>NO.</th>
                                             <th>FRAME</th>
                                             <th>WARNA</th>
-                                            <th>HARGA POKOK</th>
-                                            <th>HARGA JUAL</th>
+                                            {{-- <th>HARGA POKOK</th>
+                                            <th>HARGA JUAL</th> --}}
                                             <th>Update Terakhir</th>
                                             <th>#</th>
                                         </tr>
@@ -41,17 +41,17 @@
                                                 <td>
                                                     {{ $item->warna }}
                                                 </td>
-                                                <td>
+                                                {{-- <td>
                                                     Rp. {{ number_format($item->harga_pokok, 0, ',', '.') }}
                                                 </td>
                                                 <td>
                                                     Rp. {{ number_format($item->harga_jual, 0, ',', '.') }}
-                                                </td>
+                                                </td> --}}
                                                 <td>
-                                                    @if($item->updated_at != null)
-                                                    {{ formatTanggalIndonesia2($item->updated_at) }}
+                                                    @if ($item->updated_at != null)
+                                                        {{ formatTanggalIndonesia2($item->updated_at) }}
                                                     @else
-                                                    -
+                                                        -
                                                     @endif
                                                 </td>
                                                 <td>
@@ -101,14 +101,14 @@
                                 <div class="appendWarna">
                                 </div>
                                 <hr>
-                                <div class="mb-3 mt-3">
+                                {{-- <div class="mb-3 mt-3">
                                     <input type="number" name="harga_pokok" id="" class="form-control hargaPokok"
                                         placeholder="harga Pokok" aria-describedby="helpId" required>
                                 </div>
                                 <div class="mb-3 mt-3">
                                     <input type="number" name="harga_jual" id="" class="form-control hargaJual"
                                         placeholder="harga Jual" aria-describedby="helpId" required>
-                                </div>
+                                </div> --}}
                             </div>
                         </div>
                     </div>
@@ -190,16 +190,6 @@
                                 <div class="appendWarna">
                                 </div>
                                 <hr>
-                                <div class="form-group mb-3 mt-3">
-                                    <label>Harga Pokok</label>
-                                    <input type="number" name="harga_pokok" id="" class="form-control hargaPokok"
-                                        placeholder="harga Pokok" value="${response.data.harga_pokok}" required>
-                                </div>
-                                <div class="form-group mb-3 mt-3">
-                                    <label>Harga Jual</label>
-                                    <input type="number" name="harga_jual" id="" class="form-control hargaJual"
-                                        placeholder="harga Jual" value="${response.data.harga_jual}" required>
-                                </div>
                             </div>
                     `);
                 }

@@ -13,12 +13,12 @@
         <div class="card">
             <div class="card-body">
                 <div class="col-sm-8">
-                    <input type="text" class="form-control searchbox"  placeholder="Pencarian Item...">
+                    <input type="text" class="form-control searchbox" placeholder="Pencarian Item...">
                 </div>
             </div>
         </div>
-        </div>
-        <div class="row">
+    </div>
+    <div class="row">
         @foreach ($data as $item)
             <div class="col-sm-3" id="myitem">
                 <div class="card card-body card-item" style="border-radius: 23px;">
@@ -36,9 +36,9 @@
                     </p>
                     <p class="card-text text-muted">By : {{ $item->count_by }}
                     </p>
-                    @if(Auth::user()->auth_group == 1)
-                    <a href="javascript:void(0)" onclick="editStok('{{ $item->id }}')"
-                        class="btn btn-primary btn-sm">Edit</a>
+                    @if (Auth::user()->auth_group == 1)
+                        <a href="javascript:void(0)" onclick="editStok('{{ $item->id }}')"
+                            class="btn btn-primary btn-sm">Edit</a>
                     @endif
                 </div>
             </div>
@@ -63,26 +63,25 @@
 
         var $targets = $('.card-item');
 
-        $('.searchbox').on('input', function () {
-        $targets.show();
-        
-        var text = $(this).val().toLowerCase();   
-        if (text) {      
-            $targets.filter(':visible').each(function () {
-                var $target = $(this);
-                var $matches = 0;
-                // Search only in targeted element
-                $target.find('card-title').add($target).each(function () {            
-                    if ($(this).text().toLowerCase().indexOf("" + text + "") !== -1) {
-                    $matches++;
+        $('.searchbox').on('input', function() {
+            $targets.show();
+
+            var text = $(this).val().toLowerCase();
+            if (text) {
+                $targets.filter(':visible').each(function() {
+                    var $target = $(this);
+                    var $matches = 0;
+                    // Search only in targeted element
+                    $target.find('card-title').add($target).each(function() {
+                        if ($(this).text().toLowerCase().indexOf("" + text + "") !== -1) {
+                            $matches++;
+                        }
+                    });
+                    if ($matches === 0) {
+                        $target.hide();
                     }
                 });
-                if ($matches === 0) {
-                    $target.hide();
-                }
-            });
-        }
+            }
         })
-
     </script>
 @endsection

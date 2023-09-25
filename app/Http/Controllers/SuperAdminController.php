@@ -81,8 +81,8 @@ class SuperAdminController extends Controller
         DB::table('master_item')->where('id', $request->id)->update([
             'frame' => $request->frame,
             'warna' => $request->warna,
-            'harga_jual' => $request->harga_jual,
-            'harga_pokok' => $request->harga_pokok,
+            // 'harga_jual' => $request->harga_jual,
+            // 'harga_pokok' => $request->harga_pokok,
             'updated_at' => date('Y-m-d H:i:s'),
             'updated_by' => Auth::user()->name,
         ]);
@@ -114,8 +114,8 @@ class SuperAdminController extends Controller
         DB::table('master_item')->insert([
             'frame' => $request->frame,
             'warna' => $request->warna,
-            'harga_jual' => $request->harga_jual,
-            'harga_pokok' => $request->harga_pokok,
+            // 'harga_jual' => $request->harga_jual,
+            // 'harga_pokok' => $request->harga_pokok,
             'created_at' => date('Y-m-d H:i:s'),
             'created_by' => Auth::user()->name,
         ]);
@@ -184,7 +184,8 @@ class SuperAdminController extends Controller
         return back();
     }
 
-    public function masterInvoice(){
+    public function masterInvoice()
+    {
         $data = DB::table('invoice')->groupBy('no_invoice')->get();
         return view('database.invoice', compact('data'));
     }

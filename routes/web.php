@@ -51,23 +51,21 @@ Route::prefix('kedatangan/')->group(function () {
     Route::POST('checkInputan', [KedatanganController::class, 'checkInputan']);
     Route::get('/getUpdateQty', [KedatanganController::class, 'getUpdateQty']);
     Route::POST('postUpdateQty', [KedatanganController::class, 'postUpdateQty']);
-    Route::get('/invoice/{no_invoice}', [KedatanganController::class, 'invoice']);
+    Route::get('/report/{params}', [KedatanganController::class, 'report']);
 });
 
 Route::prefix('pengeluaran/')->group(function () {
     Route::get('/', [PengeluaranController::class, 'index']);
     Route::POST('postPengeluaran', [PengeluaranController::class, 'postPengeluaran']);
     Route::POST('checkInputan', [PengeluaranController::class, 'checkInputan']);
-    Route::get('/invoice/{no_invoice}', [PengeluaranController::class, 'invoice']);
-    // Route::get('/getUpdateQty', [PengeluaranController::class, 'getUpdateQty']);
-    // Route::POST('postUpdateQty', [PengeluaranController::class, 'postUpdateQty']);
+    Route::get('/report/{kode_pengeluaran}', [PengeluaranController::class, 'report']);
 });
 
 Route::prefix('so/')->group(function () {
     Route::get('/', [StokOpnameController::class, 'index']);
     Route::get('start', [StokOpnameController::class, 'start']);
     Route::get('stop', [StokOpnameController::class, 'stop']);
-    Route::get('getList', [StokOpnameController::class, 'getList']);
+    Route::get('getList/{frame}', [StokOpnameController::class, 'getList']);
     Route::POST('compareQty', [StokOpnameController::class, 'compareQty']);
     Route::POST('postQty', [StokOpnameController::class, 'postQty']);
     Route::get('cariData/{tgl_mulai}/{tgl_selesai}', [StokOpnameController::class, 'cariData']);
@@ -85,6 +83,8 @@ Route::prefix('permission/')->group(function () {
 
 Route::prefix('report/')->group(function () {
     Route::get('/', [ReportController::class, 'index']);
+    Route::get('transaction_report', [ReportController::class, 'transaction_report']);
+    Route::post('result_transaction_report', [ReportController::class, 'result_transaction_report']);
 });
 
 Route::POST('change-password', [SuperAdminController::class, 'change_password']);

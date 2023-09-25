@@ -31,12 +31,12 @@ class ReportController extends Controller
             12 => 'Desember',
         ];
         $master = DB::table('profit')
-                ->where('tahun', (int)date('Y'))
-                ->get();
+            ->where('tahun', (int)date('Y'))
+            ->get();
 
         $counting = DB::table('master_pengeluaran_item')
-                ->whereYear('created_pengeluaran_at', (int)date('Y'))
-                ->get();
+            ->whereYear('created_at', (int)date('Y'))
+            ->get();
 
         foreach ($bulan as $key => $value) {
             $data[]               = $master->where('pariode', $key)->first()->profit ?? 0;
@@ -61,13 +61,13 @@ class ReportController extends Controller
 
         $my_chart = [];
         $dataChart = DB::table('master_pengeluaran_item')
-        ->whereYear('created_pengeluaran_at', (int)date('Y'))
-        ->get()->groupBy('id_item');
+            ->whereYear('created_at', (int)date('Y'))
+            ->get()->groupBy('id_item');
 
         foreach ($dataChart as $key => $value) {
             $d = DB::table('master_item')
                 ->select('frame', 'warna',  DB::raw('SUM(qty) as qty'))
-                ->join('master_pengeluaran_item', 'master_item.id', '=', 'master_pengeluaran_item.id_item') 
+                ->join('master_pengeluaran_item', 'master_item.id', '=', 'master_pengeluaran_item.id_item')
                 ->where('id_item', $key)
                 ->groupBy('id_item')
                 ->get();
@@ -77,36 +77,54 @@ class ReportController extends Controller
                     'y' => (int)$y->qty
                 ];
 
-                $frame[] = 
-                [
-                    'name' => $y->frame . ' ' . $y->warna,
-                    'data' => [
-                        (int)$y->qty,
-                    ],
-                ];
+                $frame[] =
+                    [
+                        'name' => $y->frame . ' ' . $y->warna,
+                        'data' => [
+                            (int)$y->qty,
+                        ],
+                    ];
             }
         }
 
-        foreach($bulan as $key =>  $value){
+        foreach ($bulan as $key =>  $value) {
             $check[] = DB::table('master_item')
-            ->select('frame', 'warna',  DB::raw('SUM(qty) as qty'))
-            ->join('master_pengeluaran_item', 'master_item.id', '=', 'master_pengeluaran_item.id_item') 
-            ->whereMonth('created_pengeluaran_at', $key)
-            ->groupBy('id_item')
-            ->get();
-                // foreach ($check as $y) {
-                //     $frame[] = 
-                //     [
-                //         'name' => $y->frame . ' ' . $y->warna ?? '-',
-                //         'data' => [
-                //             (int)$y->qty ?? 0,
-                //         ],
-                //     ];
-                // }
+                ->select('frame', 'warna',  DB::raw('SUM(qty) as qty'))
+                ->join('master_pengeluaran_item', 'master_item.id', '=', 'master_pengeluaran_item.id_item')
+                ->whereMonth('master_pengeluaran_item.created_at', $key)
+                ->groupBy('id_item')
+                ->get();
+            // foreach ($check as $y) {
+            //     $frame[] = 
+            //     [
+            //         'name' => $y->frame . ' ' . $y->warna ?? '-',
+            //         'data' => [
+            //             (int)$y->qty ?? 0,
+            //         ],
+            //     ];
+            // }
         }
         // dd($check);
         $my_chart = json_encode($my_chart);
 
         return view('report.index', compact('series', 'series_count_penjualan', 'my_chart'));
+    }
+
+    public function transaction_report()
+    {
+        return view('report.transaction_report');
+    }
+
+    public function result_transaction_report(Request $request)
+    {
+        $data = DB::table('report_transaksi')
+            ->whereBetween('created_at', [$request->start . ' 00:00:00', $request->end . ' 23:59:59'])
+            ->orderBy('id_item', 'asc')
+            ->get();
+        $data->map(function ($value) {
+            $value->item = DB::table('master_item')->where('id', $value->id_item)->first();
+            return $value;
+        });
+        return view('report.transaction_report', compact('data'));
     }
 }
