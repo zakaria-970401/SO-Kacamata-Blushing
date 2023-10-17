@@ -36,7 +36,7 @@ class KedatanganController extends Controller
                     'id_item' => $id_item[$i],
                     'kode_kedatangan' => $kode_kedatangan,
                     'stok' => $request->qty_kedatangan[$i],
-                    'vendor' => $request->vendor[$i],
+                    // 'vendor' => $request->vendor[$i],
                     'updated_count_at' => date('Y-m-d H:i:s'),
                     'updated_count_by' => Auth::user()->name
                 ]);

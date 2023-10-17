@@ -29,7 +29,7 @@
                                             <th scope="col">Warna</th>
                                             <th scope="col">Qty Kedatangan</th>
                                             <th scope="col">Satuan</th>
-                                            <th scope="col">Vendor</th>
+                                            {{-- <th scope="col">Vendor</th> --}}
                                             <th scope="col">
                                                 <a class="btn btn-info" id="addProduct"><i
                                                         class="mdi mdi-plus-box mdi-2x"></i> Add
@@ -210,13 +210,6 @@
                         </td>
                         <td>
                             Pcs
-                        </td>
-                        <td>
-                            <select class="form-select" id="vendorSelect" name="vendor[]" required style="width: 100%";>>
-                                <option value="" disabled selected>SILAHKAN PILIH</option>
-                                <option value="Alibaba">Alibaba</option>
-                                <option value="Kawan Lama">Kawan Lama</option>
-                            </select>
                         </td>
                     <td>
                         <button class="btn btn-danger remove"><i class="mdi mdi-trash-can-outline" aria-hidden="true"></i> Delete</button>
